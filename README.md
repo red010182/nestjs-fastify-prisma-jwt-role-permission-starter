@@ -54,3 +54,6 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Known bugs
+Using fastify-adapter and injecting @Res() will result in timeout.

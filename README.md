@@ -56,4 +56,4 @@ $ npm run test:cov
 ```
 
 ## Known bugs
-Injecting @Res() will timeout.
+Injecting `@Res()` will unexpectedly timeout.

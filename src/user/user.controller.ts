@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { assert, assertParams } from '../lib/assert';
 import { Auth } from 'src/auth/auth.decorator';
 import { FastifyRequest } from 'fastify'
+import * as md5 from 'md5'
 
 @Controller('/v1/user')
 export class UserController {
@@ -19,7 +20,7 @@ export class UserController {
       }
     })
     assert(user, 400, 'account not exist')
-    assert(user.password === password, 400, 'invalid password')
+    assert(user.password === md5(password), 400, 'invalid password')
 
     const { password: _, ...rest } = user
 
@@ -34,5 +35,14 @@ export class UserController {
     return {
       user: req['user']
     }
+  }
+
+  @Get('/hello')
+  async hello() {
+    return this.prisma.user.findOne({
+      where: {
+        account: 'tpy'
+      }
+    })
   }
 }

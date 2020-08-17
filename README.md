@@ -5,7 +5,8 @@
 $ npm install
 ```
 
-Edit `prisma/schema.prisma`
+Edit `prisma/schema.prisma`.
+prisma folder should be the **same level** of `src`
 ```
 generator client {
   provider = "prisma-client-js"
@@ -18,6 +19,7 @@ datasource db {
 ```
 
 Make sure `DATABASE_URL` in environment variable.
+
 
 
 ## Running the app

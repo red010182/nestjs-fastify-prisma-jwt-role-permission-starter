@@ -1,5 +1,5 @@
 import { AuthService } from 'src/auth/auth.service';
-import { Controller, Post, Body, Get, Req } from '@nestjs/common';
+import { Controller, Post, Body, Get, Req, Param } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { assert, assertParams } from '../lib/assert';
 import { Auth } from 'src/auth/auth.decorator';
@@ -37,12 +37,14 @@ export class UserController {
     }
   }
 
-  @Get('/hello')
-  async hello() {
-    return this.prisma.user.findOne({
+  @Get('/:id')
+  async getUser(@Param('id') id: number) {
+    assertParams(id)
+    const { password: _, ...user } = await this.prisma.user.findOne({
       where: {
-        account: 'tpy'
+        id: +id
       }
     })
+    return user
   }
 }

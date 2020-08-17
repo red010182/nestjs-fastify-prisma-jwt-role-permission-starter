@@ -5,21 +5,7 @@
 $ npm install
 ```
 
-Edit `prisma/schema.prisma`.
-prisma folder should be the **same level** of `src`
-```
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
-```
-
-Make sure `DATABASE_URL` in environment variable.
-
+Edit `prisma/.env` to set `DATABASE_URL`.
 
 
 ## Running the app

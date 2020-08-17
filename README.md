@@ -56,4 +56,4 @@ $ npm run test:cov
 ```
 
 ## Known bugs
-Using fastify-adapter and injecting @Res() will result in timeout.
+Injecting @Res() will timeout.

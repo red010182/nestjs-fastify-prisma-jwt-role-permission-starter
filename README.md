@@ -5,11 +5,23 @@
 $ npm install
 ```
 
-Edit `prisma/.env` to set `DATABASE_URL`.
+Edit or create file `prisma/.env` to set `DATABASE_URL`.
 
 Or make it available as environment variable. For example in `.bash_profile`:
 ```
 export DATABASE_URL="mysql://account:password@host:port/databse?schema=public"
+```
+
+Edit or create file `prisma/schema.prisma`
+```
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
 ```
 
 ## Running the app

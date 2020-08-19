@@ -22,7 +22,7 @@ Create file `prisma/.env`:
 DATABASE_URL="mysql://account:password@host:port/databse?schema=public"
 ```
 
-## Prepare Database
+## Prepare Database (Optional)
 MySQL example
 
 ```
@@ -67,13 +67,80 @@ CREATE TABLE `RolePermission` (
 
 ```
 
+## Prepare Prisma Client
+After the database setup, we could automatically generate schema file by using these commands:
+```
+$ npx prisma introspect
+```
+
+#### Fine tune schema (Optional)
+Then, edit prisma/schema.prisma, slightly change varaible names to match camel style. Do nothing except making the first character of relation variables to be lower case here.
+
+```
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Permission {
+  id             Int              @default(autoincrement()) @id
+  name           String?
+  category       String?
+  rolePermission RolePermission[]
+
+  @@index([name], name: "name")
+}
+
+model Role {
+  id             Int              @default(autoincrement()) @id
+  name           String?
+  displayName    String?
+  rolePermission RolePermission[]
+  user           User[]
+
+  @@index([name], name: "name")
+}
+
+model RolePermission {
+  id           Int         @default(autoincrement()) @id
+  permissionID Int?
+  roleID       Int?
+  permission   Permission? @relation(fields: [permissionID], references: [id])
+  role         Role?       @relation(fields: [roleID], references: [id])
+
+  @@index([roleID], name: "roleID")
+  @@unique([permissionID, roleID], name: "permissionID")
+}
+
+model User {
+  id       Int     @default(autoincrement()) @id
+  name     String?
+  roleID   Int?
+  account  String? @unique
+  password String?
+  role     Role?   @relation(fields: [roleID], references: [id])
+
+  @@index([roleID], name: "roleID")
+}
+
+```
+
+#### Generate prisma client
+```
+$ npx prisma generate
+```
+
+Repeat above 2 steps everytime your database schema changes.
 
 ## Running the app
 
+
+
 ```bash
-# prepare prisma client
-$ npx prisma introspect
-$ npx prisma generate
 
 # development
 $ npm run start

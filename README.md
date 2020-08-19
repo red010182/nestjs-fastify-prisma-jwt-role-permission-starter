@@ -5,14 +5,7 @@
 $ npm install
 ```
 
-Edit or create file `prisma/.env` to set `DATABASE_URL`.
-
-Or make it available as environment variable. For example in `.bash_profile`:
-```
-export DATABASE_URL="mysql://account:password@host:port/databse?schema=public"
-```
-
-Edit or create file `prisma/schema.prisma`
+Create file `prisma/schema.prisma`:
 ```
 generator client {
   provider = "prisma-client-js"
@@ -24,44 +17,14 @@ datasource db {
 }
 ```
 
-## Running the app
-
-```bash
-# prepare prisma client
-$ npx prisma introspect
-$ npx prisma generate
-
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run build
-$ npm run build:binary
-$ node binary/index.js
-
+Create file `prisma/.env`:
+```
+DATABASE_URL="mysql://account:password@host:port/databse?schema=public"
 ```
 
-## Test
+## Prepare Database
+MySQL example
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Known bugs
-Injecting `@Res()` will unexpectedly timeout.
-
-
-## SQL
 ```
 CREATE TABLE `Permission` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -103,3 +66,40 @@ CREATE TABLE `RolePermission` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
 ```
+
+
+## Running the app
+
+```bash
+# prepare prisma client
+$ npx prisma introspect
+$ npx prisma generate
+
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run build
+$ npm run build:binary
+$ node binary/index.js
+
+```
+
+## Test
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
+## Known bugs
+Injecting `@Res()` will unexpectedly timeout. This is nest's bug when using fastify adapter.

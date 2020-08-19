@@ -58,9 +58,9 @@ export class UserController {
     }
   }
 
-  @Auth('admin')
-  @Get('/checkJWT')
-  async checkJWT(@Req() req: FastifyRequest) {
+  @Auth()
+  @Get('/me')
+  async me(@Req() req: FastifyRequest) {
     return {
       user: req['user'],
     }

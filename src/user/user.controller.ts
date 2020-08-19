@@ -66,7 +66,7 @@ export class UserController {
     }
   }
 
-  @Get('/list')
+  @Get('')
   async getUsers() {
     return await this.prisma.user.findMany({
       select: UserSelectFields,

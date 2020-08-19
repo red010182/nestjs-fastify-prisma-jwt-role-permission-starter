@@ -6,6 +6,13 @@ import { Auth } from 'src/auth/auth.decorator';
 import { FastifyRequest } from 'fastify'
 import * as md5 from 'md5'
 
+const UserSelectFields = {
+  id: true,
+  name: true,
+  roleID: true,
+  account: true,
+  role: true,
+}
 @Controller('/v1/user')
 export class UserController {
   constructor(private prisma: PrismaService, private authService: AuthService) {}
@@ -16,15 +23,37 @@ export class UserController {
 
     const user = await this.prisma.user.findOne({
       where: {
-        account
+        account,
+      },
+      include: {
+        role: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
       }
     })
-    assert(user, 400, 'account not exist')
+
+    assert(user, 400, 'account does not exist')
     assert(user.password === md5(password), 400, 'invalid password')
 
     const { password: _, ...rest } = user
 
+    const permissions = await this.prisma.permission.findMany({
+      where: {
+        rolePermission: {
+          every: {
+            roleID: user.roleID
+          }
+        }
+      }
+    })
+
+    const out = { ...rest, permissions }
+
     return {
+      user: out,
       token: this.authService.getJwtToken(rest)
     }
   }
@@ -33,18 +62,19 @@ export class UserController {
   @Get('/checkJWT')
   async checkJWT(@Req() req: FastifyRequest) {
     return {
-      user: req['user']
+      user: req['user'],
     }
   }
 
-  @Get('/:id')
-  async getUser(@Param('id') id: number) {
-    assertParams(id)
-    const { password: _, ...user } = await this.prisma.user.findOne({
+  @Get('/list')
+  async getUsers() {
+    return await this.prisma.user.findMany({
+      select: UserSelectFields,
       where: {
-        id: +id
+        roleID: {
+          not: null
+        }
       }
     })
-    return user
   }
 }

@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
       if(!user || !user['id']) return false
 
       const roles = this.reflector.get<string[]>('roles', context.getHandler());
-      if(roles && roles.length > 0 && roles.indexOf(user.role) === -1) {
+      if(roles && roles.length > 0 && roles.indexOf(user.role.name) === -1) {
         return false
       }
 

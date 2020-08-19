@@ -38,7 +38,9 @@ $ npm run start
 $ npm run start:dev
 
 # production mode
-$ npm run start:prod
+$ npm run build
+$ npm run build:binary
+$ node binary/index.js
 
 ```
 
